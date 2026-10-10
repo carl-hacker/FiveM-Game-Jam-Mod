@@ -1,7 +1,10 @@
+local spawn = vector3(340, 480, 150)
+local dropzone = vector3(53, -2383, 5)
+
 --Coords:
---local ped = GetPlayerPed(-1)
---local csd = GetEntityCoords(ped)
---print(csd)
+local ped = GetPlayerPed(-1)
+local csd = GetEntityCoords(ped)
+print(csd)
 
 RegisterCommand("start", function()
     local scaleform = RequestScaleformMovie("MP_BIG_MESSAGE_FREEMODE")
