@@ -9,11 +9,10 @@ function spawnDeidMan(x, y, z)
 end
 
 function findBodyLoc()
-    repeat
-        ranX = math.random(-4000.0,6000.0)
-        ranY = math.random(-4000.0,8000.0)
-    until GetSafeCoordForPed(ranX,ranY,0.0,true,2)
-    return ranX,ranY
+    ranX = math.random(-4000.0,6000.0)
+    ranY = math.random(-4000.0,8000.0)
+    x, foundPos = GetSafeCoordForPed(ranX,ranY,0.0,true,2)
+    return foundPos.x,foundPos.y
 end
 
 bodyPosX, bodyPosY = findBodyLoc()
@@ -30,7 +29,7 @@ RegisterCommand("BagUp", function()
         -- Hash for a custom pickup
         binbag = CreatePickup(738282662, targetCoord.x, targetCoord.y, targetCoord.z,1,1,true,GetHashKey("p_binbag_01_s"))
         bodyFound = true
-        dropOffBlip = AddBlipForCoord(143.5,-2450.0)
+        dropOffBlip = AddBlipForCoord(143.5,-2450.0,5.0)
     end
 end, false)
 
@@ -43,6 +42,6 @@ CreateThread(function()
             spawnDeidMan(bodyPosX, bodyPosY, 0.0)
             RemoveBlip(dropOffBlip)
         end
-        Wait()
+        Wait(5)
     end
 end)
