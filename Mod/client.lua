@@ -12,11 +12,11 @@ function findBodyLoc()
     repeat
         ranX = math.random(-4000.0,6000.0)
         ranY = math.random(-4000.0,8000.0)
-    until GetSafeCoordForPed(ranX,ranY,0.0,false,2)
+    until GetSafeCoordForPed(ranX,ranY,0.0,true,2)
     return ranX,ranY
 end
 
-bodyPosX, bodyPosY = findBodyLoc
+bodyPosX, bodyPosY = findBodyLoc()
 spawnDeidMan(bodyPosX, bodyPosY, 0.0)
 
 RegisterKeyMapping("BagUp","Bag up 'trash'","keyboard","b")
@@ -39,7 +39,7 @@ CreateThread(function()
         if IsEntityAtCoord(GetPlayerPed(-1),143.5,-2450.0,5.0,5,5,5,true,false,1) and bodyFound == true then
             bodyFound = false
             print("Drop off successful")
-            bodyPosX, bodyPosY = findBodyLoc
+            bodyPosX, bodyPosY = findBodyLoc()
             spawnDeidMan(bodyPosX, bodyPosY, 0.0)
             RemoveBlip(dropOffBlip)
         end
