@@ -46,48 +46,48 @@ end
 
 -- Spawning dead bodies
 
-function spawnDeidMan(x, y, z)
+function SpawnDeidMan(x, y, z)
     RequestModel(GetHashKey("a_m_m_beach_02"))
-    unfortunate_soul = CreatePed(0, GetHashKey("a_m_m_beach_02"), x, y, z, 180.0, false, false)
-    SetEntityHealth(unfortunate_soul, 0)
-    AddBlipForEntity(unfortunate_soul)
-    bodyFound = false
+    UnfortunateSoul = CreatePed(0, GetHashKey("a_m_m_beach_02"), x, y, z, 180.0, false, false)
+    SetEntityHealth(UnfortunateSoul, 0)
+    AddBlipForEntity(UnfortunateSoul)
+    BodyFound = false
 end
 
-function findBodyLoc()
-    ranX = math.random(-4000.0, 6000.0)
-    ranY = math.random(-4000.0, 8000.0)
-    x, foundPos = GetSafeCoordForPed(ranX, ranY, 0.0, true, 2)
-    return foundPos.x, foundPos.y
+function FindBodyLoc()
+    RanX = math.random(-4000.0, 6000.0)
+    RanY = math.random(-4000.0, 8000.0)
+    X, FoundPos = GetSafeCoordForPed(RanX, RanY, 0.0, true, 2)
+    return FoundPos.x, FoundPos.y
 end
 
-bodyPosX, bodyPosY = findBodyLoc()
-spawnDeidMan(bodyPosX, bodyPosY, 0.0)
+BodyPosX, BodyPosY = FindBodyLoc()
+SpawnDeidMan(BodyPosX, BodyPosY, 0.0)
 
 RegisterKeyMapping("BagUp", "Bag up 'trash'", "keyboard", "b")
 
 RegisterCommand("BagUp", function()
-    playerCoord = GetEntityCoords(GetPlayerPed(-1))
-    targetCoord = GetEntityCoords(unfortunate_soul)
-    if GetDistanceBetweenCoords(playerCoord.x, playerCoord.y, playerCoord.z, targetCoord.x, targetCoord.y, targetCoord.z, true) < 5 then
-        DeleteEntity(unfortunate_soul)
-        RequestModel(GetHashKey("p_binbag_01_s"))
+    PlayerCoord = GetEntityCoords(GetPlayerPed(-1))
+    TargetCoord = GetEntityCoords(UnfortunateSoul)
+    if GetDistanceBetweenCoords(playerCoord.x, playerCoord.y, playerCoord.z, TargetCoord.x, TargetCoord.y, TargetCoord.z, true) < 5 then
+        DeleteEntity(UnfortunateSoul)
+        RequestModel(GetHashKey("p_Binbag_01_s"))
         -- Hash for a custom pickup
-        binbag = CreatePickup(738282662, targetCoord.x, targetCoord.y, targetCoord.z, 1, 1, true,
-            GetHashKey("p_binbag_01_s"))
-        bodyFound = true
-        dropOffBlip = AddBlipForCoord(143.5, -2450.0, 5.0)
+        Binbag = CreatePickup(738282662, TargetCoord.x, TargetCoord.y, TargetCoord.z, 1, 1, true,
+            GetHashKey("p_Binbag_01_s"))
+        BodyFound = true
+        DropOffBlip = AddBlipForCoord(143.5, -2450.0, 5.0)
     end
 end, false)
 
 CreateThread(function()
     while true do
-        if IsEntityAtCoord(GetPlayerPed(-1), 143.5, -2450.0, 5.0, 5, 5, 5, true, false, 1) and bodyFound == true then
-            bodyFound = false
+        if IsEntityAtCoord(GetPlayerPed(-1), 143.5, -2450.0, 5.0, 5, 5, 5, true, false, 1) and BodyFound == true then
+            BodyFound = false
             print("Drop off successful")
-            bodyPosX, bodyPosY = findBodyLoc()
-            spawnDeidMan(bodyPosX, bodyPosY, 0.0)
-            RemoveBlip(dropOffBlip)
+            BodyPosX, BodyPosY = FindBodyLoc()
+            SpawnDeidMan(BodyPosX, BodyPosY, 0.0)
+            RemoveBlip(DropOffBlip)
         end
         Wait(5)
     end
