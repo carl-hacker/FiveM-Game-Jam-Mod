@@ -2,32 +2,27 @@ exports.spawnmanager:setAutoSpawn(true)
 
 local spawnpoint = vector3(143.5, -2450, 5)
 local dropzone = vector3(172, -2388, 5)
-
---Coords:
-RegisterCommand("coords", function()
-    local ped = GetPlayerPed(-1)
-    local csd = GetEntityCoords(ped)
-    print(csd)
-end, false)
+Vhc = 0
 
 exports.spawnmanager:setAutoSpawnCallback(function()
     exports.spawnmanager:spawnPlayer({
         x = spawnpoint.x,
         y = spawnpoint.y,
         z = spawnpoint.z,
-        model = 'csb_trafficwarden' -- Replace with your desired ped model or remove to keep current
-    }, function()
-        -- Optional: Code to run after the player has spawned
-        TriggerEvent('chat:addMessage', {
-            args = { 'Respawn', 'You have respawned at the designated location.' }
-        })
-    end)
-
+        model = 'csb_trafficwarden',
+    })
     return true
 end)
 
+--Spawn Player in Vehicle:
+AddEventHandler("playerSpawned", function()
+    print("spawned")
+    Utils.SpawnVehicle("trash", 300)
+    Mission()
+end)
+
 --Missions:
-RegisterCommand("start", function()
+function Mission()
     local scaleform = RequestScaleformMovie("MP_BIG_MESSAGE_FREEMODE")
     while not HasScaleformMovieLoaded(scaleform) do
         Citizen.Wait(0)
@@ -45,4 +40,4 @@ RegisterCommand("start", function()
     end
 
     SetScaleformMovieAsNoLongerNeeded(scaleform)
-end, false)
+end
