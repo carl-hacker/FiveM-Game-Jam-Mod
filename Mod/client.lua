@@ -16,6 +16,7 @@ end)
 
 --Spawn Player in Vehicle:
 AddEventHandler("playerSpawned", function()
+    Utils.RemoveVehicle(Vhc)
     print("spawned")
     Utils.SpawnVehicle("trash", 300)
     Mission()

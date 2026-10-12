@@ -8,7 +8,6 @@ function Utils.SpawnVehicle(name, h)
     while not HasModelLoaded(model) do
         RequestModel(model)
         Citizen.Wait(0)
-        print("hello")
     end
     local coords = GetEntityCoords(ped)
     local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z, h, true, false)
@@ -16,4 +15,9 @@ function Utils.SpawnVehicle(name, h)
     SetVehicleOnGroundProperly(vehicle)
     SetPedIntoVehicle(ped, vehicle, -1)
     Vhc = vehicle
+end
+
+function Utils.RemoveVehicle(entity)
+    SetEntityAsMissionEntity(Vhc, false, false)
+    DeleteVehicle(entity)
 end
