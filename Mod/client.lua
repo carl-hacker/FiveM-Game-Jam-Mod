@@ -14,6 +14,7 @@ exports.spawnmanager:setAutoSpawnCallback(function()
     return true
 end)
 
+
 --Spawn Player in Vehicle:
 AddEventHandler("playerSpawned", function()
     Utils.RemoveVehicle(Vhc)
