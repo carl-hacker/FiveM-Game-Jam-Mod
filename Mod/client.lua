@@ -14,26 +14,32 @@ exports.spawnmanager:setAutoSpawnCallback(function()
     return true
 end)
 
+TutorialActive = true
 
 --Spawn Player in Vehicle:
 AddEventHandler("playerSpawned", function()
     Utils.RemoveVehicle(Vhc)
     print("spawned")
     Utils.SpawnVehicle("trash", 300)
-    Mission()
+    if TutorialActive then
+        TutorialMission()
+        
+    end
 end)
 
 --Missions:
-function Mission()
+function TutorialMission()
     local scaleform = RequestScaleformMovie("MP_BIG_MESSAGE_FREEMODE")
     while not HasScaleformMovieLoaded(scaleform) do
         Citizen.Wait(0)
     end
 
     BeginScaleformMovieMethod(scaleform, "SHOW_MISSION_PASSED_MESSAGE")
-    ScaleformMovieMethodAddParamPlayerNameString("MISSION")
-    ScaleformMovieMethodAddParamPlayerNameString("Do Something")
+    ScaleformMovieMethodAddParamPlayerNameString("FIRST ASSIGNMENT")
+    ScaleformMovieMethodAddParamPlayerNameString("Take out the trash")
     EndScaleformMovieMethod()
+
+    spawnDeidMan(877.344788, -2380.534180, 27.957920)
 
     local timeout = GetGameTimer() + 5000
     while GetGameTimer() < timeout do
@@ -46,8 +52,14 @@ end
 
 -- Spawning dead bodies
 
+-- Tutorial Body: 877.344788, -2380.534180, 27.957920
+-- Second Mission: -327.710754, -1743.347656, 1.44066
+
 function spawnDeidMan(x, y, z)
     RequestModel(GetHashKey("a_m_m_beach_02"))
+    while not HasModelLoaded(GetHashKey("a_m_m_beach_02")) do
+        Wait(0)
+    end
     unfortunate_soul = CreatePed(0, GetHashKey("a_m_m_beach_02"), x, y, z, 180.0, false, false)
     SetEntityHealth(unfortunate_soul, 0)
     AddBlipForEntity(unfortunate_soul)
@@ -61,8 +73,7 @@ function findBodyLoc()
     return foundPos.x, foundPos.y
 end
 
-bodyPosX, bodyPosY = findBodyLoc()
-spawnDeidMan(bodyPosX, bodyPosY, 0.0)
+
 
 RegisterKeyMapping("BagUp", "Bag up 'trash'", "keyboard", "b")
 
@@ -84,11 +95,11 @@ CreateThread(function()
     while true do
         if IsEntityAtCoord(GetPlayerPed(-1), 143.5, -2450.0, 5.0, 5, 5, 5, true, false, 1) and bodyFound == true then
             bodyFound = false
-            print("Drop off successful")
-            bodyPosX, bodyPosY = findBodyLoc()
-            spawnDeidMan(bodyPosX, bodyPosY, 0.0)
+            ScaleformMovieMethodAddParamPlayerNameString("Evidence Destroyed")
             RemoveBlip(dropOffBlip)
         end
         Wait(5)
     end
 end)
+
+-- Still need to test slowing down with bags
