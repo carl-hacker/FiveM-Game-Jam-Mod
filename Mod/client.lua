@@ -21,6 +21,10 @@ AddEventHandler("playerSpawned", function()
     Utils.RemoveVehicle(Vhc)
     print("spawned")
     Utils.SpawnVehicle("trash", 300)
+    if DoesEntityExist(unfortunate_soul) then
+        DeleteEntity(unfortunate_soul)
+    end
+    bodyFound = false
     if TutorialActive then
         TutorialMission()
     elseif Mission2Active then
@@ -118,7 +122,7 @@ end, false)
 
 CreateThread(function()
     while true do
-        if IsEntityAtCoord(GetPlayerPed(-1), 143.5, -2450.0, 5.0, 5, 5, 5, true, false, 1) and bodyFound == true then
+        if IsEntityAtCoord(GetPlayerPed(-1), dropzone.x, dropzone.y, dropzone.z, 5, 5, 5, true, false, 1) and bodyFound == true then
             bodyFound = false
             RemoveBlip(dropOffBlip)
             if TutorialActive then
