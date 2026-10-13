@@ -23,7 +23,8 @@ AddEventHandler("playerSpawned", function()
     Utils.SpawnVehicle("trash", 300)
     if TutorialActive then
         TutorialMission()
-        
+    elseif Mission2Active then
+        SecondMission()
     end
 end)
 
@@ -40,6 +41,30 @@ function TutorialMission()
     EndScaleformMovieMethod()
 
     spawnDeidMan(877.344788, -2380.534180, 27.957920)
+
+    local timeout = GetGameTimer() + 5000
+    while GetGameTimer() < timeout do
+        Citizen.Wait(0)
+        DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
+    end
+
+    SetScaleformMovieAsNoLongerNeeded(scaleform)
+end
+
+function SecondMission()
+    local scaleform = RequestScaleformMovie("MP_BIG_MESSAGE_FREEMODE")
+    while not HasScaleformMovieLoaded(scaleform) do
+        Citizen.Wait(0)
+    end
+
+    BeginScaleformMovieMethod(scaleform, "SHOW_MISSION_PASSED_MESSAGE")
+    ScaleformMovieMethodAddParamPlayerNameString("GETTING STARTED")
+    ScaleformMovieMethodAddParamPlayerNameString("Retrieve the latest body")
+    EndScaleformMovieMethod()
+
+    spawnDeidMan(-327.710754, -1743.347656, 1.44066)
+
+    Mission2Active = true
 
     local timeout = GetGameTimer() + 5000
     while GetGameTimer() < timeout do
@@ -95,8 +120,13 @@ CreateThread(function()
     while true do
         if IsEntityAtCoord(GetPlayerPed(-1), 143.5, -2450.0, 5.0, 5, 5, 5, true, false, 1) and bodyFound == true then
             bodyFound = false
-            ScaleformMovieMethodAddParamPlayerNameString("Evidence Destroyed")
             RemoveBlip(dropOffBlip)
+            if TutorialActive then
+                TutorialActive = false
+                SecondMission()
+            elseif Mission2Active then
+                Mission2Active = false
+            end
         end
         Wait(5)
     end
