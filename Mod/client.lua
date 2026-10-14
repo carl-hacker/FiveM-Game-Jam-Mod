@@ -32,6 +32,8 @@ AddEventHandler("playerSpawned", function()
         TutorialMission()
     elseif Mission2Active then
         SecondMission()
+    elseif Mission3Active then
+        PondMission()
     end
 end)
 
@@ -46,6 +48,7 @@ function TutorialMission()
     ScaleformMovieMethodAddParamPlayerNameString("FIRST ASSIGNMENT")
     ScaleformMovieMethodAddParamPlayerNameString("Take out the trash")
     EndScaleformMovieMethod()
+--    BeginTextCommandDisplayText("Congrats on the new job, theres been an unfortunate accident by the old warehouse, we need you to... take care of it. The trash is quite heavy, make sure you drive up close to it, dont't want to be lugging it all the way through the car park. Good luck, employee.")
 
     spawnDeidMan(877.344788, -2380.534180, 27.957920)
 
@@ -82,11 +85,35 @@ function SecondMission()
     SetScaleformMovieAsNoLongerNeeded(scaleform)
 end
 
+function PondMission()
+    local scaleform = RequestScaleformMovie("MP_BIG_MESSAGE_FREEMODE")
+    while not HasScaleformMovieLoaded(scaleform) do
+        Citizen.Wait(0)
+    end
+
+    BeginScaleformMovieMethod(scaleform, "SHOW_MISSION_PASSED_MESSAGE")
+    ScaleformMovieMethodAddParamPlayerNameString("GOING FISHING")
+    ScaleformMovieMethodAddParamPlayerNameString("Dispose of the evidence")
+    EndScaleformMovieMethod()
+
+    spawnDeidMan(1094.038940, -638.702026, 0.0)
+
+    Mission3Active = true
+
+    local timeout = GetGameTimer() + 5000
+    while GetGameTimer() < timeout do
+        Citizen.Wait(0)
+        DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
+    end
+
+    SetScaleformMovieAsNoLongerNeeded(scaleform)
+end
+
 -- Spawning dead bodies
 
--- Tutorial Body: 877.344788, -2380.534180, 27.957920
--- Second Mission: -327.710754, -1743.347656, 1.44066
--- Third Mission (Pond): 1063.752075, -668.810669, 55.620987
+-- Tutorial Body: 877.344788, -2380.534180, 27.957920 Easy as intended
+-- Second Mission: -327.710754, -1743.347656, 1.44066 Hard but not necessarily in a fun wy
+-- Third Mission (Pond): 1094.038940, -638.702026, 0.0
 
 function spawnDeidMan(x, y, z)
     RequestModel(GetHashKey("a_m_m_beach_02"))
@@ -132,8 +159,14 @@ CreateThread(function()
             if TutorialActive then
                 TutorialActive = false
                 SecondMission()
+                NetworkEarnFromPickup(500)
             elseif Mission2Active then
                 Mission2Active = false
+                PondMission()
+                NetworkEarnFromPickup(750)
+            elseif Mission3Active then
+                Mission3Active = false
+                NetworkEarnFromPickup(1000)
             end
         end
         if bodyFound then
