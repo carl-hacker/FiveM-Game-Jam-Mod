@@ -24,6 +24,9 @@ AddEventHandler("playerSpawned", function()
     if DoesEntityExist(unfortunate_soul) then
         DeleteEntity(unfortunate_soul)
     end
+    if DoesBlipExist(dropOffBlip) then
+        RemoveBlip(dropOffBlip)
+    end
     bodyFound = false
     if TutorialActive then
         TutorialMission()
@@ -83,6 +86,7 @@ end
 
 -- Tutorial Body: 877.344788, -2380.534180, 27.957920
 -- Second Mission: -327.710754, -1743.347656, 1.44066
+-- Third Mission (Pond): 1063.752075, -668.810669, 55.620987
 
 function spawnDeidMan(x, y, z)
     RequestModel(GetHashKey("a_m_m_beach_02"))
@@ -116,7 +120,7 @@ RegisterCommand("BagUp", function()
         binbag = CreatePickup(738282662, targetCoord.x, targetCoord.y, targetCoord.z, 1, 1, true,
             GetHashKey("p_binbag_01_s"))
         bodyFound = true
-        dropOffBlip = AddBlipForCoord(143.5, -2450.0, 5.0)
+        dropOffBlip = AddBlipForCoord(dropzone.x, dropzone.y, dropzone.z)
     end
 end, false)
 
@@ -131,6 +135,16 @@ CreateThread(function()
             elseif Mission2Active then
                 Mission2Active = false
             end
+        end
+        if bodyFound then
+            SetPedMoveRateOverride(GetPlayerPed(-1), 0.67)
+            movementFucked = true
+            -- Disabling sprinting and jumping
+            DisableControlAction(0, 21, true)
+            DisableControlAction(0, 22, true)
+        elseif movementFucked then
+            SetPedMoveRateOverride(GetPlayerPed(-1), 1.0)
+            movementFucked = false
         end
         Wait(5)
     end
