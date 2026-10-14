@@ -24,6 +24,9 @@ AddEventHandler("playerSpawned", function()
     if DoesEntityExist(unfortunate_soul) then
         DeleteEntity(unfortunate_soul)
     end
+    if DoesEntityExist(angry_farmer) then
+        DeleteEntity(angry_farmer)
+    end
     if DoesBlipExist(dropOffBlip) then
         RemoveBlip(dropOffBlip)
     end
@@ -34,6 +37,8 @@ AddEventHandler("playerSpawned", function()
         SecondMission()
     elseif Mission3Active then
         PondMission()
+    elseif Mission4Active then
+        FarmMission()
     end
 end)
 
@@ -96,9 +101,46 @@ function PondMission()
     ScaleformMovieMethodAddParamPlayerNameString("Dispose of the evidence")
     EndScaleformMovieMethod()
 
-    spawnDeidMan(1094.038940, -638.702026, 0.0)
+    spawnDeidMan(1076.769897, -664.004272, 55.736099)
 
     Mission3Active = true
+
+    local timeout = GetGameTimer() + 5000
+    while GetGameTimer() < timeout do
+        Citizen.Wait(0)
+        DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
+    end
+
+    SetScaleformMovieAsNoLongerNeeded(scaleform)
+end
+
+function FarmMission()
+    local scaleform = RequestScaleformMovie("MP_BIG_MESSAGE_FREEMODE")
+    while not HasScaleformMovieLoaded(scaleform) do
+        Citizen.Wait(0)
+    end
+
+    BeginScaleformMovieMethod(scaleform, "SHOW_MISSION_PASSED_MESSAGE")
+    ScaleformMovieMethodAddParamPlayerNameString("BE READY TO FIGHT")
+    ScaleformMovieMethodAddParamPlayerNameString("Wrestle the body from its place")
+    EndScaleformMovieMethod()
+
+    spawnDeidMan(1461.521484, 1043.320557, 114.334076)
+    
+    GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_PISTOL"),50,false,true)
+    
+    -- Guard
+
+    RequestModel(GetHashKey("a_m_m_farmer_01"))
+    while not HasModelLoaded(GetHashKey("a_m_m_farmer_01")) do
+        Wait(0)
+    end
+    angry_farmer = CreatePed(0, GetHashKey("a_m_m_farmer_01"), 1462.231567, 1046.813354, 114.334061, 180.0, false, false)
+    GiveWeaponToPed(angry_farmer, GetHashKey("WEAPON_VINTAGEPISTOL"),100,false,true)
+    TaskCombatPed(angry_farmer, GetPlayerPed(-1), 0, 16)
+    AddBlipForEntity(angry_farmer)
+
+    Mission4Active = true
 
     local timeout = GetGameTimer() + 5000
     while GetGameTimer() < timeout do
@@ -113,7 +155,8 @@ end
 
 -- Tutorial Body: 877.344788, -2380.534180, 27.957920 Easy as intended
 -- Second Mission: -327.710754, -1743.347656, 1.44066 Hard but not necessarily in a fun wy
--- Third Mission (Pond): 1094.038940, -638.702026, 0.0
+-- Third Mission (Pond): 1076.769897, -664.004272, 55.736099
+-- Fourth Mission (Farm): 1461.521484, 1043.320557, 114.334076 -- Difficult, possibly too much so
 
 function spawnDeidMan(x, y, z)
     RequestModel(GetHashKey("a_m_m_beach_02"))
@@ -166,7 +209,11 @@ CreateThread(function()
                 NetworkEarnFromPickup(750)
             elseif Mission3Active then
                 Mission3Active = false
+                FarmMission()
                 NetworkEarnFromPickup(1000)
+            elseif Mission4Active then
+                Mission4Active = false
+                NetworkEarnFromPickup(1500)
             end
         end
         if bodyFound then
@@ -182,5 +229,3 @@ CreateThread(function()
         Wait(5)
     end
 end)
-
--- Still need to test slowing down with bags
