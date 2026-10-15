@@ -45,6 +45,8 @@ AddEventHandler("playerSpawned", function()
         FarmMission()
     elseif Mission5Active then
         IslandMission()
+    elseif Mission6Active then
+        RoofMission()
     end
 end)
 
@@ -136,11 +138,27 @@ function IslandMission()
     SetScaleformMovieAsNoLongerNeeded(scaleform)
 end
 
+function RoofMission()
+    Utils.GenericMission("CLIMBING UP","Rring the rubbish down","",81.970093, -1749.029663, 47.694809)
+
+    Mission6Active = true
+
+    local timeout = GetGameTimer() + 5000
+    while GetGameTimer() < timeout do
+        Citizen.Wait(0)
+        DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
+    end
+
+    SetScaleformMovieAsNoLongerNeeded(scaleform)
+end
+
+
 -- Tutorial Body: 877.344788, -2380.534180, 27.957920 Easy as intended
 -- Second Mission: -327.710754, -1743.347656, 1.44066 Hard but not necessarily in a fun wy
 -- Third Mission (Pond): 1076.769897, -664.004272, 55.736099
 -- Fourth Mission (Farm): 1461.521484, 1043.320557, 114.334076 Difficult, possibly too much so
 -- Fifth Mission (Island): 1576.933716, -2808.588135, 2.952167
+-- Sixth Mission (Roof): 81.970093, -1749.029663, 47.694809
 
 CreateThread(function()
     while true do
@@ -150,22 +168,20 @@ CreateThread(function()
             if TutorialActive then
                 TutorialActive = false
                 SecondMission()
-                NetworkEarnFromPickup(500)
             elseif Mission2Active then
                 Mission2Active = false
                 PondMission()
-                NetworkEarnFromPickup(750)
             elseif Mission3Active then
                 Mission3Active = false
                 FarmMission()
-                NetworkEarnFromPickup(1000)
             elseif Mission4Active then
                 Mission4Active = false
                 IslandMission()
-                NetworkEarnFromPickup(1500)
             elseif Mission5Active then
                 Mission5Active = false
-                NetworkEarnFromPickup(2000)
+                RoofMission()
+            elseif Mission6Active then
+                Mission6Active = false
             end
         end
         if BodyFound then
