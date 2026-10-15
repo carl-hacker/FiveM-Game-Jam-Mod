@@ -16,6 +16,7 @@ RegisterCommand("trigger_tutorial", function()
     Mission2Active = false
     Mission3Active = false
     Mission4Active = false
+    Mission5Active = false
     SetEntityHealth(GetPlayerPed(-1), 0)
 end, false)
 
@@ -24,6 +25,7 @@ RegisterCommand("trigger_mission2", function()
     Mission2Active = true
     Mission3Active = false
     Mission4Active = false
+    Mission5Active = false
     SetEntityHealth(GetPlayerPed(-1), 0)
 end, false)
 
@@ -32,6 +34,7 @@ RegisterCommand("trigger_mission3", function()
     Mission2Active = false
     Mission3Active = true
     Mission4Active = false
+    Mission5Active = false
     SetEntityHealth(GetPlayerPed(-1), 0)
 end, false)
 
@@ -40,5 +43,15 @@ RegisterCommand("trigger_mission4", function()
     Mission2Active = false
     Mission3Active = false
     Mission4Active = true
+    Mission5Active = false
+    SetEntityHealth(GetPlayerPed(-1), 0)
+end, false)
+
+RegisterCommand("trigger_mission5", function()
+    TutorialActive = false
+    Mission2Active = false
+    Mission3Active = false
+    Mission4Active = false
+    Mission5Active = true
     SetEntityHealth(GetPlayerPed(-1), 0)
 end, false)

@@ -39,6 +39,8 @@ AddEventHandler("playerSpawned", function()
         PondMission()
     elseif Mission4Active then
         FarmMission()
+    elseif Mission5Active then
+        IslandMission()
     end
 end)
 
@@ -53,7 +55,7 @@ function TutorialMission()
     ScaleformMovieMethodAddParamPlayerNameString("FIRST ASSIGNMENT")
     ScaleformMovieMethodAddParamPlayerNameString("Take out the trash")
     EndScaleformMovieMethod()
---    BeginTextCommandDisplayText("Congrats on the new job, theres been an unfortunate accident by the old warehouse, we need you to... take care of it. The trash is quite heavy, make sure you drive up close to it, dont't want to be lugging it all the way through the car park. Good luck, employee.")
+--    SendNuiMessage("Congrats on the new job, theres been an unfortunate accident by the old warehouse, we need you to... take care of it. The trash is quite heavy, make sure you drive up close to it, dont't want to be lugging it all the way through the car park. Good luck, employee.")
 
     spawnDeidMan(877.344788, -2380.534180, 27.957920)
 
@@ -151,12 +153,42 @@ function FarmMission()
     SetScaleformMovieAsNoLongerNeeded(scaleform)
 end
 
+function IslandMission()
+    local scaleform = RequestScaleformMovie("MP_BIG_MESSAGE_FREEMODE")
+    while not HasScaleformMovieLoaded(scaleform) do
+        Citizen.Wait(0)
+    end
+
+    BeginScaleformMovieMethod(scaleform, "SHOW_MISSION_PASSED_MESSAGE")
+    ScaleformMovieMethodAddParamPlayerNameString("SMOOTH SAILING")
+    ScaleformMovieMethodAddParamPlayerNameString("Rescue the stranded body")
+    EndScaleformMovieMethod()
+
+    RequestModel(GetHashKey("dinghy"))
+    while not HasModelLoaded(GetHashKey("dinghy")) do
+        Wait(0)
+    end
+    CreateVehicle(GetHashKey("dinghy"),76.839218, -2420.331055, -0.573767,0,false,false)
+    spawnDeidMan(1576.933716, -2808.588135, 2.952167)
+
+    Mission5Active = true
+
+    local timeout = GetGameTimer() + 5000
+    while GetGameTimer() < timeout do
+        Citizen.Wait(0)
+        DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
+    end
+
+    SetScaleformMovieAsNoLongerNeeded(scaleform)
+end
+
 -- Spawning dead bodies
 
 -- Tutorial Body: 877.344788, -2380.534180, 27.957920 Easy as intended
 -- Second Mission: -327.710754, -1743.347656, 1.44066 Hard but not necessarily in a fun wy
 -- Third Mission (Pond): 1076.769897, -664.004272, 55.736099
--- Fourth Mission (Farm): 1461.521484, 1043.320557, 114.334076 -- Difficult, possibly too much so
+-- Fourth Mission (Farm): 1461.521484, 1043.320557, 114.334076 Difficult, possibly too much so
+-- Fifth Mission (Island): 1576.933716, -2808.588135, 2.952167
 
 function spawnDeidMan(x, y, z)
     RequestModel(GetHashKey("a_m_m_beach_02"))
@@ -213,7 +245,11 @@ CreateThread(function()
                 NetworkEarnFromPickup(1000)
             elseif Mission4Active then
                 Mission4Active = false
+                IslandMission()
                 NetworkEarnFromPickup(1500)
+            elseif Mission5Active then
+                Mission5Active = false
+                NetworkEarnFromPickup(2000)
             end
         end
         if bodyFound then
