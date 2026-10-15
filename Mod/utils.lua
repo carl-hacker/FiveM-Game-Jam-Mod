@@ -61,3 +61,17 @@ function Utils.Mission()
     SetScaleformMovieAsNoLongerNeeded(scaleform)
     Utils.SpawnDeidMan(MissionList[MissionIndex][3], MissionList[MissionIndex][4], MissionList[MissionIndex][5])
 end
+
+function Utils.GenericMission(topmsg, bottommsg, instructions, x, y, z)
+    local scaleform = RequestScaleformMovie("MP_BIG_MESSAGE_FREEMODE")
+    while not HasScaleformMovieLoaded(scaleform) do
+        Citizen.Wait(0)
+    end
+
+    BeginScaleformMovieMethod(scaleform, "SHOW_MISSION_PASSED_MESSAGE")
+    ScaleformMovieMethodAddParamPlayerNameString(topmsg)
+    ScaleformMovieMethodAddParamPlayerNameString(bottommsg)
+    EndScaleformMovieMethod()
+
+    spawnDeidMan(x, y, z)
+end

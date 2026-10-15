@@ -213,24 +213,6 @@ function findBodyLoc()
     return foundPos.x, foundPos.y
 end
 
-
-
-RegisterKeyMapping("BagUp", "Bag up 'trash'", "keyboard", "b")
-
-RegisterCommand("BagUp", function()
-    playerCoord = GetEntityCoords(GetPlayerPed(-1))
-    targetCoord = GetEntityCoords(unfortunate_soul)
-    if GetDistanceBetweenCoords(playerCoord.x, playerCoord.y, playerCoord.z, targetCoord.x, targetCoord.y, targetCoord.z, true) < 5 then
-        DeleteEntity(unfortunate_soul)
-        RequestModel(GetHashKey("p_binbag_01_s"))
-        -- Hash for a custom pickup
-        binbag = CreatePickup(738282662, targetCoord.x, targetCoord.y, targetCoord.z, 1, 1, true,
-            GetHashKey("p_binbag_01_s"))
-        bodyFound = true
-        dropOffBlip = AddBlipForCoord(dropzone.x, dropzone.y, dropzone.z)
-    end
-end, false)
-
 CreateThread(function()
     while true do
         if IsEntityAtCoord(GetPlayerPed(-1), dropzone.x, dropzone.y, dropzone.z, 5, 5, 5, true, false, 1) and bodyFound == true then
