@@ -40,15 +40,16 @@ function Utils.FindBodyLoc()
 end
 
 --Missions:
-function Mission()
+function Utils.Mission()
     local scaleform = RequestScaleformMovie("MP_BIG_MESSAGE_FREEMODE")
     while not HasScaleformMovieLoaded(scaleform) do
         Citizen.Wait(0)
     end
+    print("mission?")
 
     BeginScaleformMovieMethod(scaleform, "SHOW_MISSION_PASSED_MESSAGE")
-    ScaleformMovieMethodAddParamPlayerNameString("MISSION")
-    ScaleformMovieMethodAddParamPlayerNameString("Do Something")
+    ScaleformMovieMethodAddParamPlayerNameString(MissionList[MissionIndex][1])
+    ScaleformMovieMethodAddParamPlayerNameString(MissionList[MissionIndex][2])
     EndScaleformMovieMethod()
 
     local timeout = GetGameTimer() + 5000
@@ -58,6 +59,5 @@ function Mission()
     end
 
     SetScaleformMovieAsNoLongerNeeded(scaleform)
-    BodyPosX, BodyPosY = Utils.FindBodyLoc()
-    Utils.SpawnDeidMan(BodyPosX, BodyPosY, 0.0)
+    Utils.SpawnDeidMan(MissionList[MissionIndex][3], MissionList[MissionIndex][4], MissionList[MissionIndex][5])
 end

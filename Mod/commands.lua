@@ -5,6 +5,8 @@ RegisterCommand("coords", function()
     print(coordinates)
 end, false)
 
+RegisterKeyMapping("BagUp", "Bag up 'trash'", "keyboard", "b")
+
 RegisterCommand("BagUp", function()
     PlayerCoord = GetEntityCoords(GetPlayerPed(-1))
     TargetCoord = GetEntityCoords(UnfortunateSoul)

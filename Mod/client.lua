@@ -3,6 +3,10 @@ exports.spawnmanager:setAutoSpawn(true)
 local spawnpoint = vector3(143.5, -2450, 5)
 local dropzone = vector3(172, -2388, 5)
 Vhc = 0
+MissionIndex = 1
+
+MissionList = {}
+MissionList[1] = { "Tutorial", "Collect your first body", 877.344788, -2380.534180, 27.957920 }
 
 exports.spawnmanager:setAutoSpawnCallback(function()
     exports.spawnmanager:spawnPlayer({
@@ -20,14 +24,12 @@ AddEventHandler("playerSpawned", function()
     Utils.RemoveVehicle(Vhc)
     print("spawned")
     Utils.SpawnVehicle("trash", 300)
-    Mission()
+    Utils.Mission()
 end)
-
-RegisterKeyMapping("BagUp", "Bag up 'trash'", "keyboard", "b")
 
 CreateThread(function()
     while true do
-        if IsEntityAtCoord(GetPlayerPed(-1), 143.5, -2450.0, 5.0, 5, 5, 5, true, false, 1) and BodyFound == true then
+        if IsEntityAtCoord(GetPlayerPed(-1), 172, -2388, 5, 5, 5, 5, true, false, 1) and BodyFound == true then
             BodyFound = false
             print("Drop off successful")
             BodyPosX, BodyPosY = Utils.FindBodyLoc()
