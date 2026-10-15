@@ -25,11 +25,13 @@ end
 -- Spawning dead bodies
 function Utils.SpawnDeidMan(x, y, z)
     RequestModel(GetHashKey("a_m_m_beach_02"))
-    UnfortunateSoul = CreatePed(0, GetHashKey("a_m_m_beach_02"), x, y, z, 180.0, false, false)
-    SetEntityHealth(UnfortunateSoul, 0)
-    AddBlipForEntity(UnfortunateSoul)
+    while not HasModelLoaded(GetHashKey("a_m_m_beach_02")) do
+        Wait(0)
+    end
+    Unfortunate_Soul = CreatePed(0, GetHashKey("a_m_m_beach_02"), x, y, z, 180.0, false, false)
+    SetEntityHealth(Unfortunate_Soul, 0)
+    AddBlipForEntity(Unfortunate_Soul)
     BodyFound = false
-    print("Spawned man")
 end
 
 function Utils.FindBodyLoc()
@@ -63,7 +65,7 @@ function Utils.Mission()
 end
 
 function Utils.GenericMission(topmsg, bottommsg, instructions, x, y, z)
-    local scaleform = RequestScaleformMovie("MP_BIG_MESSAGE_FREEMODE")
+    scaleform = RequestScaleformMovie("MP_BIG_MESSAGE_FREEMODE")
     while not HasScaleformMovieLoaded(scaleform) do
         Citizen.Wait(0)
     end
@@ -73,5 +75,5 @@ function Utils.GenericMission(topmsg, bottommsg, instructions, x, y, z)
     ScaleformMovieMethodAddParamPlayerNameString(bottommsg)
     EndScaleformMovieMethod()
 
-    spawnDeidMan(x, y, z)
+    Utils.SpawnDeidMan(x, y, z)
 end

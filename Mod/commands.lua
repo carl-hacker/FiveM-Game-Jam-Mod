@@ -9,15 +9,14 @@ RegisterKeyMapping("BagUp", "Bag up 'trash'", "keyboard", "b")
 
 RegisterCommand("BagUp", function()
     PlayerCoord = GetEntityCoords(GetPlayerPed(-1))
-    TargetCoord = GetEntityCoords(UnfortunateSoul)
+    TargetCoord = GetEntityCoords(Unfortunate_Soul)
     if GetDistanceBetweenCoords(PlayerCoord.x, PlayerCoord.y, PlayerCoord.z, TargetCoord.x, TargetCoord.y, TargetCoord.z, true) < 5 then
-        DeleteEntity(UnfortunateSoul)
-        RequestModel(GetHashKey("p_Binbag_01_s"))
+        DeleteEntity(Unfortunate_Soul)
+        RequestModel(GetHashKey("p_binbag_01_s"))
         -- Hash for a custom pickup
-        Binbag = CreatePickup(738282662, TargetCoord.x, TargetCoord.y, TargetCoord.z, 1, 1, true,
-            GetHashKey("p_Binbag_01_s"))
+        local binbag = CreatePickup(738282662, TargetCoord.x, TargetCoord.y, TargetCoord.z, 1, 1, true, GetHashKey("p_binbag_01_s"))
         BodyFound = true
-        DropOffBlip = AddBlipForCoord(143.5, -2450.0, 5.0)
+        DropOffBlip = AddBlipForCoord(dropzone.x, dropzone.y, dropzone.z)
     end
 end, false)
 
